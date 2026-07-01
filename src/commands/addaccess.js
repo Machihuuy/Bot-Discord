@@ -27,6 +27,9 @@ const COMMAND_LABELS = {
   sendimage:   '/sendimage',
   setwelcome:  '/setwelcome',
   testwelcome: '/testwelcome',
+  addaccess:   '/addaccess',
+  settings:    '/settings',
+  ticket:      '/ticket',
 };
 
 module.exports = {

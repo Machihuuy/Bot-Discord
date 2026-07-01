@@ -12,19 +12,23 @@ module.exports = {
       .addFields(
         {
           name: 'Welcome',
-          value: '`/setwelcome` — atur pesan, gambar, warna, dan channel welcome\n`/testwelcome` — preview welcome message sebelum live',
+          value: '`/setwelcome` — atur pesan, gambar, warna, footer, dan channel welcome\n`/testwelcome` — preview welcome message sebelum aktif',
         },
         {
           name: 'Server',
           value: '`/rules` — kirim embed rules ke channel\n`/biodata` — kirim biodata ke channel\n`/sendimage` — kirim gambar dalam embed ke channel',
         },
         {
-          name: 'Akses & Pengaturan',
-          value: '`/addaccess` — tambah, hapus, atau lihat daftar akses user\n`/settings` — pengaturan bot untuk server ini\n`/ticket setup` — setup sistem tiket',
+          name: 'Tiket',
+          value: '`/ticket setup` — setup panel tiket member dan admin',
         },
         {
-          name: 'Role',
-          value: '`Administrator` — akses semua command, bisa kelola akses\n`Operator` — akses rules, biodata, sendimage, setwelcome, testwelcome\n`User` — akses biodata',
+          name: 'Akses & Pengaturan',
+          value: '`/addaccess` — kelola akses command bot per user\n`/settings` — pengaturan bot\n`/help` — tampilkan halaman ini',
+        },
+        {
+          name: 'Role Akses',
+          value: '`Administrator` — semua command, kelola akses\n`Operator` — bisa dipilih command apa saja saat setup akses\n`User` — biodata',
         },
       );
 

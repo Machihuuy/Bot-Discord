@@ -20,8 +20,8 @@ const ROLE_LEVEL = { administrator: 3, operator: 2, user: 1 };
 
 // Command yang bisa diakses tiap role (selain /help yang bebas)
 const ROLE_COMMANDS = {
-  administrator: ['all'],           // semua command
-  operator:      ['rules', 'biodata', 'sendimage', 'setwelcome', 'testwelcome'],
+  administrator: ['all'],
+  operator:      ['rules', 'biodata', 'sendimage', 'setwelcome', 'testwelcome', 'addaccess', 'settings', 'ticket'],
   user:          ['biodata'],
 };
 
