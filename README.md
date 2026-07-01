@@ -58,7 +58,7 @@ Buat nambahin akses, tinggal pakai `/addaccess` lalu klik Tambah Akses. Bisa inp
 
 ## Catatan
 
-Data config welcome dan akses disimpan di `src/data/config.json` jadi ga hilang waktu bot di-restart.
+Data config welcome dan akses disimpan di `src/data/config.json` jadi ga hilang waktu bot di restart.
 
 Warna embed bisa pakai nama seperti merah, biru, pink, atau langsung hex seperti #ff5733.
 
