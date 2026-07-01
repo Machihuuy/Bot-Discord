@@ -257,16 +257,29 @@ async function handleCreateTicket(interaction) {
     return interaction.editReply('❌ Setup tiket belum lengkap. Hubungi admin untuk run `/ticket setup` ulang.');
   }
 
-  // Buat thread di ticket channel
+  // Buat public thread di member channel
   const thread = await ticketChannel.threads.create({
     name: `tiket-${interaction.user.username}`,
-    autoArchiveDuration: 10080, // 7 hari
-    type: ChannelType.PrivateThread,
+    autoArchiveDuration: 10080,
+    type: ChannelType.PublicThread,
     reason: `Tiket dari ${interaction.user.tag}`,
   });
 
   // Tambah pembuat tiket ke thread
   await thread.members.add(interaction.user.id);
+
+  // Auto-add semua user yang punya role administrator/operator
+  const { getAccess } = require('../utils/access');
+  const accessList = getAccess(interaction.guild.id);
+  const staffIds = Object.entries(accessList)
+    .filter(([, data]) => data.role === 'administrator' || data.role === 'operator')
+    .map(([uid]) => uid);
+
+  for (const staffId of staffIds) {
+    if (staffId !== interaction.user.id) {
+      await thread.members.add(staffId).catch(() => {});
+    }
+  }
 
   // Pesan pertama di dalam thread
   const threadEmbed = new EmbedBuilder()
@@ -281,7 +294,6 @@ async function handleCreateTicket(interaction) {
   await thread.send({
     content: `${interaction.user}`,
     embeds: [threadEmbed],
-    components: [threadControlRow(thread.id, null, 'open')],
   });
 
   // Notifikasi ke admin channel
@@ -364,11 +376,10 @@ async function handleClose(interaction, threadId) {
 
   if (!tiket) return interaction.reply({ content: '❌ Data tiket tidak ditemukan.', flags: MessageFlags.Ephemeral });
 
-  // Admin/operator bisa close, atau member pemilik tiket
-  const isStaff  = myRole === 'administrator' || myRole === 'operator';
-  const isOwner  = tiket.userId === interaction.user.id;
-  if (!isStaff && !isOwner) {
-    return interaction.reply({ content: '❌ Kamu tidak bisa menutup tiket ini.', flags: MessageFlags.Ephemeral });
+  // Hanya admin/operator yang bisa close
+  const isStaff = myRole === 'administrator' || myRole === 'operator';
+  if (!isStaff) {
+    return interaction.reply({ content: '❌ Hanya admin/operator yang bisa menutup tiket.', flags: MessageFlags.Ephemeral });
   }
 
   await interaction.reply({
