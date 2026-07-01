@@ -26,7 +26,7 @@ Jalankan bot:
 npm start
 ```
 
-Slash command akan otomatis ter-deploy saat bot online.
+Slash command akan otomatis terdeploy saat bot online.
 
 ## Command
 
@@ -64,11 +64,11 @@ Untuk menambah akses, gunakan `/addaccess` lalu klik Tambah Akses dan masukkan U
 
 Tiket dibuat sebagai thread di channel panel member. Saat tiket dibuat, semua user dengan role Administrator dan Operator otomatis ditambahkan ke thread.
 
-Admin bisa claim tiket dari panel admin channel. Setelah di-claim, tiket bisa ditutup dari panel admin. Member yang membuat tiket tidak bisa menutup tiketnya sendiri.
+Admin bisa claim tiket dari panel admin channel. Setelah diclaim, tiket bisa ditutup dari panel admin. Member yang membuat tiket tidak bisa menutup tiketnya sendiri.
 
 ## Catatan
 
-Data konfigurasi disimpan di `src/data/config.json` dan tidak hilang saat bot di-restart.
+Data konfigurasi disimpan di `src/data/config.json` dan tidak hilang saat bot direstart.
 
 Warna embed bisa menggunakan nama seperti `merah`, `biru`, `pink`, atau format hex seperti `#ff5733`.
 
@@ -82,6 +82,6 @@ Warna embed bisa menggunakan nama seperti `merah`, `biru`, `pink`, atau format h
 
 `package.json` — daftar dependency dan script. `npm start` untuk menjalankan bot, `npm run clear` untuk bersihkan command lama.
 
-`.env` — menyimpan token dan ID yang bersifat rahasia. Jangan di-push ke GitHub.
+`.env` — menyimpan token dan ID yang bersifat rahasia. Jangan dipush ke GitHub.
 
-`noted` - sistem role di addaccess adalah prototipe jika menggunakan role dari discordnya dan bisa di implementasikan menggunakan role langsung dari discordnya, agar data tidak di reset setiap restart bot atau deploy ulang aku sarankan untuk menggunakan database seperti mongodb dan supabase, untuk hostin bebas kalau mau gratis pakai railway
+`noted` - sistem role di addaccess adalah prototipe jika menggunakan role dari discordnya dan bisa di implementasikan menggunakan role langsung dari discordnya, agar data tidak di reset setiap restart bot atau deploy ulang aku sarankan untuk menggunakan database seperti mongodb dan supabase, untuk hosting bebas kalau mau gratis pakai railway
