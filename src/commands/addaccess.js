@@ -200,11 +200,14 @@ module.exports = {
       removeUserAccess(interaction.guild.id, targetId);
 
       if (targetUser) {
-        const dmEmbed = new EmbedBuilder()
-          .setColor(0xed4245)
-          .setTitle('Akses Bot Dicabut')
-          .setDescription(`Akses kamu untuk menggunakan bot di server **${interaction.guild.name}** telah dicabut.`);
-        try { await targetUser.send({ embeds: [dmEmbed] }); } catch { /* DM dimatikan */ }
+        const { getGuildConfig } = require('../utils/storage');
+        if (getGuildConfig(interaction.guild.id).dmAccess !== false) {
+          const dmEmbed = new EmbedBuilder()
+            .setColor(0xed4245)
+            .setTitle('Akses Bot Dicabut')
+            .setDescription(`Akses kamu untuk menggunakan bot di server **${interaction.guild.name}** telah dicabut.`);
+          try { await targetUser.send({ embeds: [dmEmbed] }); } catch { /* DM dimatikan */ }
+        }
       }
 
       return interaction.update({
@@ -275,7 +278,7 @@ module.exports = {
 
       if (roleName === 'administrator') {
         setUserAccess(interaction.guild.id, targetId, 'administrator', ['all']);
-        await sendAccessDM(targetUser, interaction.guild.name, 'administrator', ['all']);
+        await sendAccessDM(targetUser, interaction.guild.name, interaction.guild.id, 'administrator', ['all']);
 
         return interaction.update({
           embeds: [new EmbedBuilder()
@@ -342,7 +345,7 @@ module.exports = {
       try { targetUser = await interaction.client.users.fetch(targetId); } catch { targetUser = null; }
       const name = targetUser ? targetUser.tag : targetId;
 
-      await sendAccessDM(targetUser, interaction.guild.name, roleName, selectedCommands);
+      await sendAccessDM(targetUser, interaction.guild.name, interaction.guild.id, roleName, selectedCommands);
 
       return interaction.update({
         embeds: [new EmbedBuilder()
@@ -363,8 +366,13 @@ module.exports = {
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
-async function sendAccessDM(targetUser, guildName, role, commands) {
+async function sendAccessDM(targetUser, guildName, guildId, role, commands) {
   if (!targetUser) return;
+
+  // Cek apakah DM notifikasi akses diaktifkan
+  const { getGuildConfig } = require('../utils/storage');
+  const cfg = getGuildConfig(guildId);
+  if (cfg.dmAccess === false) return;
 
   const roleInfo = {
     administrator: { label: 'Administrator', desc: 'Kamu memiliki akses penuh ke semua command bot dan dapat mengelola akses user lain.' },

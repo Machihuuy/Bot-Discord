@@ -53,20 +53,5 @@ module.exports = {
     if (cfg.welcomeFooter) embed.setFooter({ text: cfg.welcomeFooter });
 
     await channel.send({ embeds: [embed] });
-
-    // DM sambutan
-    try {
-      await member.send({
-        embeds: [
-          new EmbedBuilder()
-            .setColor(color)
-            .setTitle(`Hai ${member.user.username}! 👋`)
-            .setDescription(
-              `Selamat datang di **${member.guild.name}**!\n\n` +
-              `Silakan baca peraturan server dan nikmati waktu kamu di sini.`
-            ),
-        ],
-      });
-    } catch { /* DM dimatikan */ }
   },
 };

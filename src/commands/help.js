@@ -20,7 +20,7 @@ module.exports = {
         },
         {
           name: 'Akses',
-          value: '`/addaccess` — tambah, hapus, atau lihat daftar akses user',
+          value: '`/addaccess` — tambah, hapus, atau lihat daftar akses user\n`/settings` — pengaturan bot untuk server ini',
         },
         {
           name: 'Role',
