@@ -110,8 +110,7 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setColor(warna)
       .setTitle(judul)
-      .setDescription(deskripsi)
-      .setTimestamp();
+      .setDescription(deskripsi);
 
     await targetChannel.send({ embeds: [embed] });
     await interaction.reply({

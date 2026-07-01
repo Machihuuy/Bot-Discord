@@ -48,9 +48,7 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor(color)
-      .setDescription(welcomeText)
-      .setFooter({ text: 'Ini adalah preview — bukan pesan asli' })
-      .setTimestamp();
+      .setDescription(welcomeText);
 
     if (cfg.welcomeImage)  embed.setImage(cfg.welcomeImage);
     if (cfg.welcomeFooter) embed.setFooter({ text: `${cfg.welcomeFooter}  •  Preview` });

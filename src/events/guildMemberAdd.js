@@ -64,8 +64,7 @@ module.exports = {
             .setDescription(
               `Selamat datang di **${member.guild.name}**!\n\n` +
               `Silakan baca peraturan server dan nikmati waktu kamu di sini.`
-            )
-            .setTimestamp(),
+            ),
         ],
       });
     } catch { /* DM dimatikan */ }

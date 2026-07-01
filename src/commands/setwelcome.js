@@ -144,8 +144,7 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor(finalColor)
-      .setDescription(previewText)
-      .setTimestamp();
+      .setDescription(previewText);
 
     if (cfg.welcomeImage) embed.setImage(cfg.welcomeImage);
     if (footer) embed.setFooter({ text: footer });

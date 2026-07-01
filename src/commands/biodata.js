@@ -95,8 +95,7 @@ module.exports = {
       .setColor(warna)
       .setTitle('BIODATA')
       .setDescription(deskripsi)
-      .setThumbnail(interaction.user.displayAvatarURL({ size: 256 }))
-      .setTimestamp();
+      .setThumbnail(interaction.user.displayAvatarURL({ size: 256 }));
 
     await targetChannel.send({ embeds: [embed] });
 

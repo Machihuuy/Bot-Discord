@@ -24,11 +24,9 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setColor(0xed4245)
       .setDescription(
-        `### 👋 ${member.user.tag} telah meninggalkan server.\n` +
+        `### ${member.user.tag} telah meninggalkan server.\n` +
         `Sisa member: **${member.guild.memberCount}**`
-      )
-      .setFooter({ text: `ID: ${member.user.id}` })
-      .setTimestamp();
+      );
 
     if (attachment) {
       embed.setImage('attachment://goodbye.png');

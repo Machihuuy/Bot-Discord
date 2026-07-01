@@ -26,8 +26,7 @@ module.exports = {
           name: 'Role',
           value: '`Administrator` — akses semua command, bisa kelola akses\n`Operator` — akses rules, biodata, sendimage, setwelcome, testwelcome\n`User` — akses biodata',
         },
-      )
-      .setFooter({ text: interaction.guild.name, iconURL: interaction.guild.iconURL() ?? undefined });
+      );
 
     await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
   },

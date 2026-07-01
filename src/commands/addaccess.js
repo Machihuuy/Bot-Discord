@@ -203,8 +203,7 @@ module.exports = {
         const dmEmbed = new EmbedBuilder()
           .setColor(0xed4245)
           .setTitle('Akses Bot Dicabut')
-          .setDescription(`Akses kamu untuk menggunakan bot di server **${interaction.guild.name}** telah dicabut.`)
-          .setTimestamp();
+          .setDescription(`Akses kamu untuk menggunakan bot di server **${interaction.guild.name}** telah dicabut.`);
         try { await targetUser.send({ embeds: [dmEmbed] }); } catch { /* DM dimatikan */ }
       }
 
@@ -248,8 +247,7 @@ module.exports = {
         embeds: [new EmbedBuilder()
           .setColor(0x5865f2)
           .setTitle(`Daftar Akses (${entries.length} user)`)
-          .setDescription(lines.join('\n\n'))
-          .setTimestamp()],
+          .setDescription(lines.join('\n\n'))],
         components: [new ActionRowBuilder().addComponents(
           new ButtonBuilder().setCustomId(`${CMD_ID}:menu`).setLabel('Kembali').setStyle(ButtonStyle.Secondary),
         )],
@@ -354,8 +352,7 @@ module.exports = {
             { name: 'User', value: `${name}\nID: \`${targetId}\``, inline: true },
             { name: 'Role', value: roleName, inline: true },
             { name: 'Command', value: selectedCommands.map(c => `\`/${c}\``).join(', ') },
-          )
-          .setTimestamp()],
+          )],
         components: [new ActionRowBuilder().addComponents(
           new ButtonBuilder().setCustomId(`${CMD_ID}:menu`).setLabel('Kembali ke Menu').setStyle(ButtonStyle.Secondary),
         )],
@@ -388,8 +385,7 @@ async function sendAccessDM(targetUser, guildName, role, commands) {
       { name: 'Role', value: `**${info.label}**` },
       { name: 'Deskripsi Role', value: info.desc },
       { name: 'Command yang Bisa Diakses', value: commandList },
-    )
-    .setTimestamp();
+    );
 
   try { await targetUser.send({ embeds: [embed] }); } catch { /* DM dimatikan */ }
 }
@@ -404,8 +400,7 @@ function mainMenuEmbed(guildName) {
       '**Administrator** — Akses penuh semua command + kelola akses\n' +
       '**Operator** — Akses setwelcome, rules, biodata, sendimage\n' +
       '**User** — Akses biodata'
-    )
-    .setTimestamp();
+    );
 }
 
 function mainMenuRow(myRole) {
