@@ -19,8 +19,8 @@ module.exports = {
           value: '`/rules` — kirim embed rules ke channel\n`/biodata` — kirim biodata ke channel\n`/sendimage` — kirim gambar dalam embed ke channel',
         },
         {
-          name: 'Akses',
-          value: '`/addaccess` — tambah, hapus, atau lihat daftar akses user\n`/settings` — pengaturan bot untuk server ini',
+          name: 'Akses & Pengaturan',
+          value: '`/addaccess` — tambah, hapus, atau lihat daftar akses user\n`/settings` — pengaturan bot untuk server ini\n`/ticket setup` — setup sistem tiket',
         },
         {
           name: 'Role',

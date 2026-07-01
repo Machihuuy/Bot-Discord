@@ -7,6 +7,7 @@ const {
   MessageFlags,
 } = require('discord.js');
 const { getGuildConfig, setGuildConfig } = require('../utils/storage');
+const { getUserRole } = require('../utils/access');
 
 const CMD_ID = 'settings';
 
@@ -18,6 +19,14 @@ module.exports = {
     .setDescription('Pengaturan bot untuk server ini'),
 
   async execute(interaction) {
+    const myRole = getUserRole(interaction.guild.id, interaction.user.id);
+    if (myRole !== 'administrator') {
+      return interaction.reply({
+        content: '❌ Kamu tidak memiliki permission untuk menggunakan command ini.',
+        flags: MessageFlags.Ephemeral,
+      });
+    }
+
     const cfg = getGuildConfig(interaction.guild.id);
     await interaction.reply({
       embeds: [settingsEmbed(cfg)],
@@ -27,6 +36,14 @@ module.exports = {
   },
 
   async buttonHandle(interaction) {
+    const myRole = getUserRole(interaction.guild.id, interaction.user.id);
+    if (myRole !== 'administrator') {
+      return interaction.reply({
+        content: '❌ Kamu tidak memiliki permission.',
+        flags: MessageFlags.Ephemeral,
+      });
+    }
+
     const [, action] = interaction.customId.split(':');
     const cfg = getGuildConfig(interaction.guild.id);
 

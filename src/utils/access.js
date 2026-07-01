@@ -26,7 +26,7 @@ const ROLE_COMMANDS = {
 };
 
 // Command yang tidak perlu cek akses
-const PUBLIC_COMMANDS = ['help'];
+const PUBLIC_COMMANDS = ['help', 'ticket'];
 
 /**
  * Ambil data akses semua user di guild
