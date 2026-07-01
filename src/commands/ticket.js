@@ -44,12 +44,6 @@ module.exports = {
             .addChannelTypes(ChannelType.GuildText)
             .setRequired(true)
         )
-        .addChannelOption(opt =>
-          opt.setName('ticket_channel')
-            .setDescription('Channel tempat thread tiket dibuat')
-            .addChannelTypes(ChannelType.GuildText)
-            .setRequired(true)
-        )
     ),
 
   // ── Slash command ──────────────────────────────────────────────────────────
@@ -78,8 +72,6 @@ module.exports = {
     if (action === 'close') return handleClose(interaction, parts[2]);
     if (action === 'close_confirm') return handleCloseConfirm(interaction, parts[2]);
     if (action === 'close_cancel') return handleCloseCancel(interaction);
-    if (action === 'pause') return handlePause(interaction, parts[2]);
-    if (action === 'resume') return handleResume(interaction, parts[2]);
   },
 
   // ── Modal submit ───────────────────────────────────────────────────────────
@@ -90,38 +82,64 @@ module.exports = {
 
 // ── Setup ──────────────────────────────────────────────────────────────────────
 async function handleSetup(interaction) {
-  await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-
   const memberChannel = interaction.options.getChannel('member_channel');
   const adminChannel  = interaction.options.getChannel('admin_channel');
-  const ticketChannel = interaction.options.getChannel('ticket_channel');
 
-  // Simpan config
+  // Simpan config channel dulu sebelum modal
   setTicketConfig(interaction.guild.id, {
     memberChannelId: memberChannel.id,
     adminChannelId:  adminChannel.id,
-    ticketChannelId: ticketChannel.id,
+    ticketChannelId: memberChannel.id,
   });
 
-  // Kirim panel ke member channel
-  const memberEmbed = new EmbedBuilder()
-    .setColor(0x5865f2)
-    .setTitle('Buat Tiket')
-    .setDescription('Klik tombol di bawah untuk membuat tiket baru.\nTim kami akan segera membantu kamu.');
+  // Tampilkan modal untuk custom embed panel
+  const modal = new ModalBuilder()
+    .setCustomId('ticket_modal:setup')
+    .setTitle('Custom Panel Tiket');
 
-  await memberChannel.send({
-    embeds: [memberEmbed],
-    components: [new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setCustomId(`${CMD_ID}:open`)
-        .setLabel('Buat Tiket')
-        .setStyle(ButtonStyle.Primary),
-    )],
-  });
-
-  await interaction.editReply(
-    `✅ Setup selesai!\n- Panel member: ${memberChannel}\n- Panel admin: ${adminChannel}\n- Thread tiket: ${ticketChannel}`
+  modal.addComponents(
+    new ActionRowBuilder().addComponents(
+      new TextInputBuilder()
+        .setCustomId('judul')
+        .setLabel('Judul Embed')
+        .setStyle(TextInputStyle.Short)
+        .setPlaceholder('Contoh: Buat Tiket')
+        .setValue('Buat Tiket')
+        .setMaxLength(100)
+        .setRequired(true)
+    ),
+    new ActionRowBuilder().addComponents(
+      new TextInputBuilder()
+        .setCustomId('deskripsi')
+        .setLabel('Deskripsi Embed')
+        .setStyle(TextInputStyle.Paragraph)
+        .setPlaceholder('Contoh: Klik tombol di bawah untuk membuat tiket...')
+        .setValue('Klik tombol di bawah untuk membuat tiket baru.\nTim kami akan segera membantu kamu.')
+        .setMaxLength(500)
+        .setRequired(true)
+    ),
+    new ActionRowBuilder().addComponents(
+      new TextInputBuilder()
+        .setCustomId('label_tombol')
+        .setLabel('Label Tombol')
+        .setStyle(TextInputStyle.Short)
+        .setPlaceholder('Contoh: Buat Tiket')
+        .setValue('Buat Tiket')
+        .setMaxLength(80)
+        .setRequired(true)
+    ),
+    new ActionRowBuilder().addComponents(
+      new TextInputBuilder()
+        .setCustomId('warna')
+        .setLabel('Warna Embed (opsional)')
+        .setStyle(TextInputStyle.Short)
+        .setPlaceholder('#5865f2  —  atau: merah, biru, hijau, pink...')
+        .setMaxLength(30)
+        .setRequired(false)
+    ),
   );
+
+  await interaction.showModal(modal);
 }
 
 // ── Buka tiket (member klik tombol) ───────────────────────────────────────────
@@ -177,8 +195,54 @@ async function handleOpenTicket(interaction) {
   await interaction.showModal(modal);
 }
 
-// ── Modal submit — buat thread tiket ──────────────────────────────────────────
+// ── Modal submit — routing ─────────────────────────────────────────────────────
 async function handleTicketModalSubmit(interaction) {
+  const [, action] = interaction.customId.split(':');
+  if (action === 'setup') return handleSetupModalSubmit(interaction);
+  if (action === 'create') return handleCreateTicket(interaction);
+}
+
+// ── Modal setup submit — kirim panel ke channel ────────────────────────────────
+async function handleSetupModalSubmit(interaction) {
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
+  const guildId   = interaction.guild.id;
+  const cfg       = getTicketConfig(guildId);
+  const judul     = interaction.fields.getTextInputValue('judul').trim();
+  const deskripsi = interaction.fields.getTextInputValue('deskripsi').trim();
+  const labelBtn  = interaction.fields.getTextInputValue('label_tombol').trim();
+  const warnaRaw  = interaction.fields.getTextInputValue('warna').trim();
+  const warna     = parseColor(warnaRaw, 0x5865f2);
+
+  const memberChannel = interaction.guild.channels.cache.get(cfg.memberChannelId);
+  const adminChannel  = interaction.guild.channels.cache.get(cfg.adminChannelId);
+
+  if (!memberChannel || !adminChannel) {
+    return interaction.editReply('❌ Channel tidak ditemukan. Jalankan `/ticket setup` ulang.');
+  }
+
+  const memberEmbed = new EmbedBuilder()
+    .setColor(warna)
+    .setTitle(judul)
+    .setDescription(deskripsi);
+
+  await memberChannel.send({
+    embeds: [memberEmbed],
+    components: [new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId(`${CMD_ID}:open`)
+        .setLabel(labelBtn)
+        .setStyle(ButtonStyle.Primary),
+    )],
+  });
+
+  await interaction.editReply(
+    `✅ Setup selesai!\n- Panel member & thread tiket: ${memberChannel}\n- Panel admin: ${adminChannel}`
+  );
+}
+
+// ── Modal create submit — buat thread tiket ────────────────────────────────────
+async function handleCreateTicket(interaction) {
   await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
   const guildId    = interaction.guild.id;
@@ -270,7 +334,15 @@ async function handleClaim(interaction, threadId) {
 
   // Tambah claimer ke thread
   const thread = interaction.guild.channels.cache.get(threadId);
-  if (thread) await thread.members.add(interaction.user.id);
+  if (thread) {
+    await thread.members.add(interaction.user.id);
+    // Kirim pesan notifikasi di dalam thread
+    await thread.send({
+      embeds: [new EmbedBuilder()
+        .setColor(0x57f287)
+        .setDescription(`Tiket ini diambil oleh **${interaction.user.tag}**.`)],
+    });
+  }
 
   // Update pesan di admin channel
   await updateAdminMessage(interaction, threadId, 'claimed');
@@ -339,41 +411,30 @@ async function handleCloseCancel(interaction) {
   await interaction.update({ content: 'Dibatalkan.', embeds: [], components: [] });
 }
 
-// ── Pause tiket ───────────────────────────────────────────────────────────────
-async function handlePause(interaction, threadId) {
-  const guildId = interaction.guild.id;
-  const myRole  = getUserRole(guildId, interaction.user.id);
-
-  if (myRole !== 'administrator' && myRole !== 'operator') {
-    return interaction.reply({ content: '❌ Hanya admin/operator yang bisa pause tiket.', flags: MessageFlags.Ephemeral });
-  }
-
-  saveTicket(guildId, threadId, { status: 'paused' });
-  await updateAdminMessage(interaction, threadId, 'paused');
-  await updateThreadMessage(interaction, threadId, 'paused');
-
-  await interaction.reply({ content: '✅ Tiket di-pause.', flags: MessageFlags.Ephemeral });
-}
-
-// ── Resume tiket ──────────────────────────────────────────────────────────────
-async function handleResume(interaction, threadId) {
-  const guildId = interaction.guild.id;
-  const myRole  = getUserRole(guildId, interaction.user.id);
-
-  if (myRole !== 'administrator' && myRole !== 'operator') {
-    return interaction.reply({ content: '❌ Hanya admin/operator yang bisa resume tiket.', flags: MessageFlags.Ephemeral });
-  }
-
-  const tiket      = getTicket(guildId, threadId);
-  const prevStatus = tiket?.claimedBy ? 'claimed' : 'open';
-  saveTicket(guildId, threadId, { status: prevStatus });
-  await updateAdminMessage(interaction, threadId, prevStatus);
-  await updateThreadMessage(interaction, threadId, prevStatus);
-
-  await interaction.reply({ content: '✅ Tiket di-resume.', flags: MessageFlags.Ephemeral });
-}
+// ── Helpers (warna, status, rows) di atas
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
+
+const WARNA_MAP = {
+  merah: 0xe74c3c, oranye: 0xe67e22, kuning: 0xf1c40f,
+  hijau: 0x2ecc71, tosca: 0x1abc9c, biru: 0x3498db,
+  ungu: 0x9b59b6, pink: 0xe91e8c, putih: 0xffffff,
+  hitam: 0x23272a, abu: 0x95a5a6, emas: 0xf0b429,
+  silver: 0xbdc3c7, navy: 0x2c3e50,
+  red: 0xe74c3c, orange: 0xe67e22, yellow: 0xf1c40f,
+  green: 0x2ecc71, blue: 0x3498db, purple: 0x9b59b6,
+  white: 0xffffff, black: 0x23272a, gray: 0x95a5a6,
+  grey: 0x95a5a6, gold: 0xf0b429,
+};
+
+function parseColor(input, def = 0x5865f2) {
+  if (!input) return def;
+  const c = input.trim().toLowerCase();
+  if (WARNA_MAP[c] !== undefined) return WARNA_MAP[c];
+  const h = c.startsWith('#') ? c.slice(1) : c;
+  if (/^[0-9a-f]{6}$/i.test(h)) return parseInt(h, 16);
+  return def;
+}
 
 function statusLabel(status) {
   return { open: 'Menunggu', claimed: 'Ditangani', paused: 'Dijeda', closed: 'Ditutup' }[status] ?? status;
@@ -383,21 +444,11 @@ function statusColor(status) {
   return { open: 0xffa500, claimed: 0x57f287, paused: 0x95a5a6, closed: 0xed4245 }[status] ?? 0x5865f2;
 }
 
-// Row tombol di dalam thread (untuk admin/operator)
+// Row tombol di dalam thread
 function threadControlRow(threadId, claimedBy, status) {
-  const row = new ActionRowBuilder();
-  if (status === 'paused') {
-    row.addComponents(
-      new ButtonBuilder().setCustomId(`${CMD_ID}:resume:${threadId}`).setLabel('Resume').setStyle(ButtonStyle.Success),
-      new ButtonBuilder().setCustomId(`${CMD_ID}:close:${threadId}`).setLabel('Tutup Tiket').setStyle(ButtonStyle.Danger),
-    );
-  } else {
-    row.addComponents(
-      new ButtonBuilder().setCustomId(`${CMD_ID}:pause:${threadId}`).setLabel('Pause').setStyle(ButtonStyle.Secondary),
-      new ButtonBuilder().setCustomId(`${CMD_ID}:close:${threadId}`).setLabel('Tutup Tiket').setStyle(ButtonStyle.Danger),
-    );
-  }
-  return row;
+  return new ActionRowBuilder().addComponents(
+    new ButtonBuilder().setCustomId(`${CMD_ID}:close:${threadId}`).setLabel('Tutup Tiket').setStyle(ButtonStyle.Danger),
+  );
 }
 
 // Row tombol di admin channel
