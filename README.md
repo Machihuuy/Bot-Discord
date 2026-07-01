@@ -61,3 +61,17 @@ Buat nambahin akses, tinggal pakai `/addaccess` lalu klik Tambah Akses. Bisa inp
 Data config welcome dan akses disimpan di `src/data/config.json` jadi ga hilang waktu bot di-restart.
 
 Warna embed bisa pakai nama seperti merah, biru, pink, atau langsung hex seperti #ff5733.
+
+## File-file penting
+
+`src/index.js` — titik awal bot. Di sini bot login ke Discord, load semua command dan event, terus deploy slash command secara otomatis waktu bot online.
+
+`src/deploy-commands.js` — versi manual dari deploy slash command. Dipakai kalau mau deploy ke satu server spesifik pakai GUILD_ID. Sekarang udah jarang dipakai karena `index.js` udah handle sendiri.
+
+`src/clear-commands.js` — buat hapus semua slash command lama dari Discord terus deploy ulang yang baru. Berguna kalau ada command lama yang masih nongol padahal udah dihapus dari kode. Cara pakainya `node src/clear-commands.js`.
+
+`package.json` — daftar dependency dan script. `npm start` jalanin `index.js`, `npm run deploy` jalanin `deploy-commands.js`, `npm run clear` jalanin `clear-commands.js`.
+
+`.env` — tempat nyimpen token dan ID yang sifatnya rahasia. File ini ga boleh di push ke GitHub.
+
+`.gitignore` — daftar file yang diabaikan Git, isinya `node_modules/` dan `.env`.
