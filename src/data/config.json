@@ -23,9 +23,10 @@
         ]
       },
       "782061324246450178": {
-        "role": "administrator",
+        "role": "operator",
         "commands": [
-          "all"
+          "biodata",
+          "sendimage"
         ]
       }
     },
@@ -35,7 +36,7 @@
     "welcomeChannel": "1521793669634723900",
     "pendingAccess_939711643141689384": {
       "targetId": "782061324246450178",
-      "roleName": "user"
+      "roleName": "operator"
     },
     "welcomeFooter": ""
   }

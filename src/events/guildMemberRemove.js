@@ -1,11 +1,19 @@
 const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const { generateWelcomeCard } = require('../utils/welcomeCard');
+const { getUserRole, removeUserAccess } = require('../utils/access');
 
 module.exports = {
   name: 'guildMemberRemove',
   once: false,
 
   async execute(member, client) {
+    // Hapus akses bot jika user punya akses terdaftar
+    const role = getUserRole(member.guild.id, member.user.id);
+    if (role) {
+      removeUserAccess(member.guild.id, member.user.id);
+      console.log(`Akses dihapus: ${member.user.tag} keluar dari ${member.guild.name}`);
+    }
+
     const welcomeChannelId = process.env.WELCOME_CHANNEL_ID;
     if (!welcomeChannelId) return;
 

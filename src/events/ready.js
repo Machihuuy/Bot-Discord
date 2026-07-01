@@ -9,11 +9,12 @@ module.exports = {
     console.log(`\nOnline as: ${client.user.tag}`);
     console.log(`Connected to ${client.guilds.cache.size} server(s)\n`);
 
-    // Set activity
+    // Set activity — tampilkan nama server pertama
+    const guildName = client.guilds.cache.first()?.name ?? 'server';
     client.user.setPresence({
       activities: [
         {
-          name: `${client.guilds.cache.reduce((acc, g) => acc + g.memberCount, 0)} member | /help`,
+          name: guildName,
           type: ActivityType.Watching,
         },
       ],

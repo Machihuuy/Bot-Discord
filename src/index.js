@@ -51,14 +51,34 @@ client.once('ready', async () => {
   try {
     const rest = new REST().setToken(process.env.BOT_TOKEN);
 
+    // Deploy global dulu sebagai baseline
     console.log('\nDeploy slash commands globally...');
     await rest.put(
       Routes.applicationCommands(process.env.CLIENT_ID),
       { body: commandDefs }
     );
-    console.log(`${commandDefs.length} slash commands deployed successfully!`);
+    console.log(`${commandDefs.length} slash commands deployed globally.`);
+
+    // Cek tiap guild — kalau command belum terdeteksi, deploy ke guild itu langsung
+    for (const guild of client.guilds.cache.values()) {
+      try {
+        const existing = await rest.get(
+          Routes.applicationGuildCommands(process.env.CLIENT_ID, guild.id)
+        );
+
+        if (existing.length < commandDefs.length) {
+          await rest.put(
+            Routes.applicationGuildCommands(process.env.CLIENT_ID, guild.id),
+            { body: commandDefs }
+          );
+          console.log(`Commands deployed to guild: ${guild.name} (${existing.length} -> ${commandDefs.length})`);
+        }
+      } catch {
+        // Skip jika gagal cek satu guild
+      }
+    }
   } catch (error) {
-    console.error('❌ Gagal deploy commands:', error.message);
+    console.error('Failed to deploy commands:', error.message);
   }
 });
 
