@@ -15,7 +15,7 @@ Isi file `.env` dengan data berikut:
 ```env
 BOT_TOKEN=token_bot
 CLIENT_ID=application_id_bot
-WELCOME_CHANNEL_ID=id_channel_welcome
+WELCOME_CHANNEL_ID=id_channel_welcome(bisa di setting dengan slash command)
 ```
 
 Sebelum menjalankan bot, aktifkan **Server Members Intent** dan **Message Content Intent** di Discord Developer Portal bagian Bot.
