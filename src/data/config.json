@@ -1,0 +1,42 @@
+{
+  "1187665096902725694": {
+    "welcomeImage": "https://cdn.discordapp.com/ephemeral-attachments/1521777945364926505/1521785037228478494/Cl4bWgdt6i.gif?ex=6a461842&is=6a44c6c2&hm=c3ee5f0dbc9e172c1af25bd55c7cf55de4c24db9ecf56007046ba32f5a6278eb&",
+    "welcomeText": "kalo {user} selamat datang di {server}!!!\n\nbaca <#1187665096902725697>",
+    "welcomeColor": "pink",
+    "rulesImage_939711643141689384": "https://cdn.discordapp.com/ephemeral-attachments/1521773250823327914/1521786697728262184/images_5.jpg?ex=6a4619ce&is=6a44c84e&hm=2972acc24ab275a6336cf0648f380168c94e98e2d346f26c2f2c0a4210330c13&",
+    "welcomeChannel": "1187859875905142854",
+    "access": {
+      "939711643141689384": {
+        "role": "administrator",
+        "commands": [
+          "all"
+        ]
+      }
+    }
+  },
+  "1521793563799720046": {
+    "access": {
+      "939711643141689384": {
+        "role": "administrator",
+        "commands": [
+          "all"
+        ]
+      },
+      "782061324246450178": {
+        "role": "administrator",
+        "commands": [
+          "all"
+        ]
+      }
+    },
+    "welcomeImage": "https://cdn.discordapp.com/ephemeral-attachments/1521794920560726121/1521801999048376357/Cl4bWgdt6i.gif?ex=6a46280e&is=6a44d68e&hm=3d531453dd304c65a0cb5db8983b31b2726232de8e662450b41c0db989fc876a&",
+    "welcomeText": "hi {user} selamat datang di {server}\ntes di <#1521793564403568692>",
+    "welcomeColor": "pink",
+    "welcomeChannel": "1521793669634723900",
+    "pendingAccess_939711643141689384": {
+      "targetId": "782061324246450178",
+      "roleName": "user"
+    },
+    "welcomeFooter": ""
+  }
+}
