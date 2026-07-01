@@ -1,6 +1,5 @@
 const {
   SlashCommandBuilder,
-  PermissionFlagsBits,
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle,
@@ -43,8 +42,7 @@ module.exports = {
         .setName('channel')
         .setDescription('Channel tujuan pengiriman rules')
         .setRequired(true)
-    )
-    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
+    ),
 
   // ── Langkah 1: Tampilkan modal ──────────────────────────────────────────
   async execute(interaction) {

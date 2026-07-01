@@ -1,6 +1,5 @@
 const {
   SlashCommandBuilder,
-  PermissionFlagsBits,
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle,
@@ -51,8 +50,7 @@ module.exports = {
         .setName('gambar')
         .setDescription('Gambar banner di welcome message (opsional)')
         .setRequired(false)
-    )
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    ),
 
   // ── Langkah 1: Simpan gambar & channel ke storage, lalu tampilkan modal ────
   async execute(interaction) {

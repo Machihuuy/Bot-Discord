@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const { getGuildConfig } = require('../utils/storage');
 
 const WARNA_MAP = {
@@ -30,8 +30,7 @@ module.exports = {
         .setName('target')
         .setDescription('User yang disimulasikan (default: dirimu sendiri)')
         .setRequired(false)
-    )
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    ),
 
   async execute(interaction) {
     const member = interaction.options.getMember('target') ?? interaction.member;

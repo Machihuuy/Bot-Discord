@@ -1,6 +1,5 @@
 const {
   SlashCommandBuilder,
-  PermissionFlagsBits,
   EmbedBuilder,
   MessageFlags,
   ChannelType,
@@ -50,8 +49,7 @@ module.exports = {
         .setName('warna')
         .setDescription('Warna embed: hex (#ff5733) atau nama (merah, biru, pink, ungu...)')
         .setRequired(false)
-    )
-    .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
+    ),
 
   async execute(interaction) {
     const attachment    = interaction.options.getAttachment('gambar');
