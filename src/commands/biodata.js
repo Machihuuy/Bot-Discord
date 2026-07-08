@@ -57,7 +57,7 @@ module.exports = {
       .setStyle(TextInputStyle.Paragraph)
       .setPlaceholder('Ceritakan tentang dirimu...')
       .setMinLength(5)
-      .setMaxLength(500)
+      .setMaxLength(4000)
       .setRequired(true);
 
     const warnaInput = new TextInputBuilder()
@@ -93,9 +93,9 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor(warna)
-      .setTitle('BIODATA')
+      .setTitle('𝓐𝓫𝓸𝓾𝓽 𝓶𝓮')
       .setDescription(deskripsi)
-      .setThumbnail(interaction.user.displayAvatarURL({ size: 256 }));
+      .setThumbnail('https://cdn.discordapp.com/attachments/1521833663002579016/1522943976225636465/Bust_up_cropped_by_Runarize.png');
 
     await targetChannel.send({ embeds: [embed] });
 
